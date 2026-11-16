@@ -96,6 +96,7 @@ button {
   padding:14px 25px;
   letter-spacing:1px;
   font-size:13px;
+  cursor:pointer;
   box-shadow:0 0 18px #ff36b955;
 }
 
@@ -208,12 +209,62 @@ body.galaxy-only .letter {
   0% {opacity:1;transform:scale(.5) translateY(0)}
   100% {opacity:0;transform:scale(1.8) translateY(-65px)}
 }
+
+/* DESKTOP / MOBILE SWITCH */
+
+#viewToggle {
+  position:fixed;
+  z-index:12;
+  top:18px;
+  left:18px;
+  padding:11px 16px;
+  font-size:11px;
+  background:rgba(70,15,75,.8);
+  backdrop-filter:blur(10px);
+  box-shadow:0 0 15px #ff36b955;
+}
+
+body.desktop-view .paper {
+  width:90%;
+  max-width:720px;
+  padding:clamp(30px,5vw,65px);
+  border-radius:28px;
+}
+
+body.desktop-view .paper h2 {
+  font-size:clamp(32px,4vw,46px);
+}
+
+body.desktop-view .paper p {
+  font-size:clamp(17px,2vw,21px);
+  line-height:2.1;
+}
+
+body.desktop-view .intro h1 {
+  font-size:clamp(48px,7vw,90px);
+}
+
+body.desktop-view .intro p {
+  font-size:18px;
+}
+
+body.desktop-view .sticker {
+  font-size:36px;
+}
+
+body.desktop-view #hint {
+  font-size:13px;
+}
+
 </style>
 </head>
 
 <body>
 
 <canvas id="space"></canvas>
+
+<!-- DESKTOP / MOBILE BUTTON -->
+<button id="viewToggle">💻 DESKTOP VIEW</button>
 
 <div id="stickers">
   <span class="sticker s11">🌟</span>
@@ -452,8 +503,6 @@ function drawLoveNotes(size) {
 
     const pulse=.88+.12*Math.sin(time*2+i);
 
-    // Find horizontal space available in this row
-
     const row=heartRows.find(r=>r.y===note.y);
     const index=row.x.indexOf(note.x);
 
@@ -591,8 +640,6 @@ function draw() {
     ctx.stroke();
     ctx.restore();
   }
-
-  // LOVE NOTES: PART OF THE GALAXY TRANSFORM
 
   drawLoveNotes(size);
 
@@ -838,6 +885,26 @@ document.getElementById("music").onclick=async()=>{
   }
 };
 
+// DESKTOP AND MOBILE VIEW SWITCH
+
+const viewToggle=document.getElementById("viewToggle");
+let desktopMode=false;
+
+viewToggle.onclick=()=>{
+  desktopMode=!desktopMode;
+
+  document.body.classList.toggle(
+    "desktop-view",
+    desktopMode
+  );
+
+  viewToggle.textContent=desktopMode
+    ? "📱 MOBILE VIEW"
+    : "💻 DESKTOP VIEW";
+
+  resize();
+};
+
 // START
 
 window.addEventListener("resize",resize);
@@ -848,4 +915,3 @@ draw();
 
 </body>
 </html>
-
